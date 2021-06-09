@@ -1,4 +1,5 @@
-## function in c:
+## is_prime.s
+# function in c:
 # bool prime_checker(int n) {
 # 	bool flag = false;
 #     for(int i = 2; i <= n/2; i++) {
