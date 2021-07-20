@@ -121,6 +121,28 @@ pc_exit:
 
 
 
+#########################################################
+#				reset space of a string function		#
+#														#
+#	   get a string and put null characters everywhere 	#
+# 					to clean it up						#
+#														#
+#########################################################
+
+resetSpace:
+		# a0 points to the string to be cleaned
+		# a1 contains the length of that string
+		li $a2, 0	# the 'blank' byte to be stored
+		li $a3, 0	# serves as loop counter
+
+	loop:	beq $a3, $a1, stop	# if all characters have been processed, stop looping
+			sb $a2, 0($a0)		# 'clean' a byte in string
+			addi $a0, $a0, 1	# increment offset
+			addi $a3, $a3, 1	# i++
+			j loop
+
+	stop:	
+		jr $ra
 
 
 
@@ -272,9 +294,7 @@ print_binary_loop:
 	addi	$s2, $s2, 1
 	j	print_binary_loop
 print_binary_done:
-	li	$v0, 4
-	la	$a0, newline_string
-	syscall
+	jal print_endl
 
 	lw	$ra, 0($sp)
 	lw $s0, 4($sp)
@@ -549,7 +569,24 @@ print_endl:
 	jr $ra
 
 
+#########################################################
+#														#
+##	 		Print character		 			   		   ##
+#														#
+#########################################################
+# before calling, put character in $a0
+# jal print_char
 
+print_char:
+	addi $sp, $sp, -4
+	sw $v0, 0($sp)
+
+	li $v0, 11
+	syscall
+
+	lw $v0, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
 
 
 ###########################
